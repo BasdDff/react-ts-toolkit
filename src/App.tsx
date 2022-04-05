@@ -1,26 +1,29 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, {useEffect} from 'react';
+import {useAppDispatch} from "./hooks/useAppDispatch";
+import {useAppSelector} from "./hooks/useAppSelector";
+import {fetchUsers} from "./redux/actions/user";
+import PostContainer from "./components/PostContainer";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    const dispatch = useAppDispatch()
+    const {users, loading, error} = useAppSelector(state => state.userReducer)
+
+    useEffect(() => {
+        dispatch(fetchUsers())
+    }, [])
+
+    return (
+        <div>
+            {loading && <div> Loading... </div>}
+            {error && <div> {error} </div>}
+            {users.map((user) =>
+                <div>
+                    {user.name}
+                </div>
+            )}
+            <PostContainer/>
+        </div>
+    );
 }
 
 export default App;
